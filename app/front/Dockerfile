@@ -1,12 +1,15 @@
+
+# Use Nginx as the base image
 FROM nginx:alpine
 
-WORKDIR /app
-COPY . .
+# Set working directory to Nginx's serve directory
+WORKDIR /usr/share/nginx/html
+
+# Copy the contents of the app/front directory to the workdir
+COPY . /usr/share/nginx/html
 
 # Set the environment variable
 ENV WS_BACK_URL=http://localhost:5000
 
-RUN chmod +x ./entrypoint.sh
-
-# Lancer Nginx en mode foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Use exec form of ENTRYPOINT to make Nginx stay in the foreground so Docker can track it
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
